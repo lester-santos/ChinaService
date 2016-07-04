@@ -9,7 +9,8 @@ using System.Net.Mail;
 using System.Configuration;
 using System.Text;
 using System.Threading;
-
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace DontiaChinaProxy.App_Code
 {
@@ -296,6 +297,29 @@ namespace DontiaChinaProxy.App_Code
                 responses.Add((dr[0].ToString()));
             }
             return responses.ToArray();
+        }
+
+        public DataSet EMR(string memberID)
+        {
+
+            DataSet ds = _DataAccess.EMR(memberID);
+            return ds;
+        }
+        public byte[] EMRpdfFile(string Filename)
+        {
+
+
+            string EMRContainer = ConfigurationManager.AppSettings["UploadedEMRfiles"].ToString();
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference(EMRContainer);
+            container.CreateIfNotExists();
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(Filename);
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                blockBlob.DownloadToStream(ms);
+                return ms.ToArray();
+            }
         }
 
 

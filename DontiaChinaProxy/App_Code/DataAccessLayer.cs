@@ -1056,5 +1056,29 @@ namespace DontiaChinaProxy.App_Code
             }
             return _dt;
         }
+        public DataSet EMR(string MemberID)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                SqlCommand _cmd = new SqlCommand("spEMR", _DentalConOpen());
+                _cmd.CommandType = CommandType.StoredProcedure;
+                _cmd.Parameters.Add("@MemberID", SqlDbType.VarChar).Value = MemberID;
+                SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
+                _adapter.Fill(ds);
+                _adapter.Dispose();
+                _cmd.Dispose();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _DentalConClose();
+            }
+            return ds;
+        }
+        
     }
 }

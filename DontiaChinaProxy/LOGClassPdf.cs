@@ -75,7 +75,7 @@ namespace DontiaChinaProxy
         }
 
 
-        public ModPdfReport CreateLOGPDFReport(string _RequestNo, List<byte[]> _images, List<byte[]> _imgDontiaLink, List<byte[]> _imgDontiaFooter)
+        public ModPdfReport CreateLOGPDFReport(string _LOGNo, List<byte[]> _images, List<byte[]> _imgDontiaLink, List<byte[]> _imgDontiaFooter)
         {
             ModPdfReport _pdfreport = null;
             try
@@ -85,16 +85,16 @@ namespace DontiaChinaProxy
 
                 #region Get Data for LOG Report
                 DataSet _report = null;
-                DatabaseHandler.Parameters i1 = new DatabaseHandler.Parameters("@RequestNo", _RequestNo);
+                DatabaseHandler.Parameters i1 = new DatabaseHandler.Parameters("@LOGNo", _LOGNo);
                 DatabaseHandler.ParameterCollection ic = new DatabaseHandler.ParameterCollection();
                 ic.Add(i1);
                 _report = new DataSet();
                 _report = _dbHandler.GetDataSet("sp_GetLOGInformation", ic);
                 _report.DataSetName = "LOGINFORMATION";
                 _report.Tables[0].TableName = "LOGInfo";
-                _report.Tables[1].TableName = "TreatmentInfo";
-                _report.Tables[2].TableName = "ContactInfo";
-                _report.Tables[3].TableName = "ProviderContactInfo";
+                //_report.Tables[1].TableName = "TreatmentInfo";
+                _report.Tables[1].TableName = "ContactInfo";
+                _report.Tables[2].TableName = "ProviderContactInfo";
 
                 #endregion
 
@@ -131,7 +131,7 @@ namespace DontiaChinaProxy
                 List<iText.Chunk> _HeaderChunk = new List<iText.Chunk>();
                 _HeaderChunk.Add(new iText.Chunk("" + Environment.NewLine, HeaderFont));
                 List<iText.Chunk> _HeaderChunk2 = new List<iText.Chunk>();
-                _HeaderChunk2.Add(new iText.Chunk("Verification Form" + Environment.NewLine, HeaderFont));
+                _HeaderChunk2.Add(new iText.Chunk("Letter of Authorization" + Environment.NewLine, HeaderFont));
                 _HeaderChunk2.Add(new iText.Chunk("" + Environment.NewLine, HeaderFont));
                 string serviceprovider = _report.Tables["ContactInfo"].Rows[0]["ServiceProvider"].ToString().TrimEnd();
                 _ContentHeader.AddRange(_HeaderChunk);
@@ -139,7 +139,7 @@ namespace DontiaChinaProxy
                 string _qrCodeText = _report.Tables["LOGInfo"].Rows[0]["LOGNo"].ToString() + "," +
                                      _report.Tables["LOGInfo"].Rows[0]["IssueDate"].ToString() + "," +
                                      serviceprovider + "," +
-                                     _RequestNo;
+                                     LOGNo;
 
                 BarcodeQRCode _qrcode = new BarcodeQRCode(_qrCodeText, 123, 123, null);
                 iText.Image imgQrCode = _qrcode.GetImage();
@@ -229,11 +229,11 @@ namespace DontiaChinaProxy
                 #endregion
 
                 #region Member Information
-                string PatientName = _report.Tables[0].Rows[0]["Patient"].ToString();
-                string PatientID = _report.Tables[0].Rows[0]["MemberID"].ToString();
+                string PatientName = _report.Tables[0].Rows[0]["MemberName"].ToString();
+                string PatientID = _report.Tables[0].Rows[0]["CardNo"].ToString();
                 string Corporation = _report.Tables[0].Rows[0]["CorpName"].ToString();
                 string ServiceProvider = _report.Tables[0].Rows[0]["ServiceProviderName"].ToString();
-                string MemberID = _report.Tables[0].Rows[0]["MemberID"].ToString();
+                string MemberID = _report.Tables[0].Rows[0]["CardNo"].ToString();
                 string Address = _report.Tables[0].Rows[0]["Address"].ToString();
                 string IssueDate = _report.Tables[0].Rows[0]["IssueDate"].ToString();
                 string AvailmentDate = _report.Tables[0].Rows[0]["AvailmentDate"].ToString();
@@ -245,55 +245,55 @@ namespace DontiaChinaProxy
                 int m = 0;
                 int l = 0;
                 int f = 0;
-                for (int i = 0; i < _report.Tables[3].Rows.Count; i++)
+                for (int i = 0; i < _report.Tables[2].Rows.Count; i++)
                 {
 
-                    if (_report.Tables[3].Rows[i]["ContactType"].ToString() == "M")
+                    if (_report.Tables[2].Rows[i]["ContactType"].ToString() == "M")
                     {
                         if (m < 3)
                         {
                             if (m == 0)
                             {
-                                ContactMobile = ContactMobile + _report.Tables[3].Rows[i]["ProviderContact"].ToString();
+                                ContactMobile = ContactMobile + _report.Tables[2].Rows[i]["ProviderContact"].ToString();
                                 m++;
                             }
                             else
                             {
-                                ContactMobile = ContactMobile + " ," + _report.Tables[3].Rows[i]["ProviderContact"].ToString();
+                                ContactMobile = ContactMobile + " ," + _report.Tables[2].Rows[i]["ProviderContact"].ToString();
                                 m++;
                             }
 
                         }
                     }
-                    if (_report.Tables[3].Rows[i]["ContactType"].ToString() == "L")
+                    if (_report.Tables[2].Rows[i]["ContactType"].ToString() == "L")
                     {
                         if (l < 3)
                         {
                             if (l == 0)
                             {
-                                ContactLandLine = ContactLandLine + _report.Tables[3].Rows[i]["ProviderContact"].ToString();
+                                ContactLandLine = ContactLandLine + _report.Tables[2].Rows[i]["ProviderContact"].ToString();
                                 l++;
                             }
                             else
                             {
-                                ContactLandLine = ContactLandLine + " ," + _report.Tables[3].Rows[i]["ProviderContact"].ToString();
+                                ContactLandLine = ContactLandLine + " ," + _report.Tables[2].Rows[i]["ProviderContact"].ToString();
                                 l++;
                             }
 
                         }
                     }
-                    if (_report.Tables[3].Rows[i]["ContactType"].ToString() == "F")
+                    if (_report.Tables[2].Rows[i]["ContactType"].ToString() == "F")
                     {
                         if (f < 3)
                         {
                             if (f == 0)
                             {
-                                ContactFax = ContactFax + _report.Tables[3].Rows[i]["ProviderContact"].ToString();
+                                ContactFax = ContactFax + _report.Tables[2].Rows[i]["ProviderContact"].ToString();
                                 f++;
                             }
                             else
                             {
-                                ContactFax = ContactFax + " ," + _report.Tables[3].Rows[i]["ProviderContact"].ToString();
+                                ContactFax = ContactFax + " ," + _report.Tables[2].Rows[i]["ProviderContact"].ToString();
                                 f++;
                             }
 
@@ -320,7 +320,7 @@ namespace DontiaChinaProxy
 
 
 
-                _chnkLeftMemberInformation.Add(new iText.Chunk("Verification Code" + Environment.NewLine, dataFontBold));
+                _chnkLeftMemberInformation.Add(new iText.Chunk("Authorization No" + Environment.NewLine, dataFontBold));
                 _chnkCenterMemberInformation.Add(new iText.Chunk(LOGNo + Environment.NewLine, dataFontBold));
                 iText.Phrase _VerificationRowCol1 = new iText.Phrase();
                 iText.Phrase _VerificationRowCol2 = new iText.Phrase();
@@ -341,9 +341,9 @@ namespace DontiaChinaProxy
 
 
 
-                _chnkLeftMemberInformation.Add(new iText.Chunk("Appointment Date :" + Environment.NewLine, dataFontNormal));
+                _chnkLeftMemberInformation.Add(new iText.Chunk("Availment Date :" + Environment.NewLine, dataFontNormal));
                 _chnkCenterMemberInformation.Add(new iText.Chunk(AvailmentDate + Environment.NewLine, dataFontNormal));
-                _chnkLeftMemberInformation.Add(new iText.Chunk("Issued On :" + Environment.NewLine, dataFontNormal));
+                _chnkLeftMemberInformation.Add(new iText.Chunk("Issue Date :" + Environment.NewLine, dataFontNormal));
                 _chnkCenterMemberInformation.Add(new iText.Chunk(RequestDate + Environment.NewLine, dataFontNormal));
                 _chnkLeftMemberInformation.Add(new iText.Chunk(Environment.NewLine));
                 _chnkCenterMemberInformation.Add(new iText.Chunk(Environment.NewLine));
@@ -379,7 +379,7 @@ namespace DontiaChinaProxy
                 _chnkCenterMemberInformation.Add(new iText.Chunk(MemberID + Environment.NewLine, dataFontNormal));
                 _chnkLeftMemberInformation.Add(new iText.Chunk("Name :" + Environment.NewLine, dataFontNormal));
                 _chnkCenterMemberInformation.Add(new iText.Chunk(PatientName + Environment.NewLine, dataFontNormal));
-                _chnkLeftMemberInformation.Add(new iText.Chunk("Company :" + Environment.NewLine, dataFontNormal));
+                _chnkLeftMemberInformation.Add(new iText.Chunk("Account :" + Environment.NewLine, dataFontNormal));
                 _chnkCenterMemberInformation.Add(new iText.Chunk(Corporation + Environment.NewLine, dataFontNormal));
                 _chnkLeftMemberInformation.Add(new iText.Chunk(Environment.NewLine));
                 _chnkCenterMemberInformation.Add(new iText.Chunk(Environment.NewLine));
@@ -400,7 +400,7 @@ namespace DontiaChinaProxy
                 _chnkCenterMemberInformation.Clear();
 
 
-                _chnkLeftMemberInformation.Add(new iText.Chunk("Clinic Detail" + Environment.NewLine, dataFontBold));
+                _chnkLeftMemberInformation.Add(new iText.Chunk("Hospital Detail" + Environment.NewLine, dataFontBold));
                 iText.Phrase _ClinicDetailsHeader = new iText.Phrase();
                 _ClinicDetailsHeader.AddRange(_chnkLeftMemberInformation);
                 _ClinicDetailsHeader.AddRange(_chnkCenterMemberInformation);
@@ -411,10 +411,10 @@ namespace DontiaChinaProxy
                 tblMaxicareMemberHeader.AddCell(_CellClinicDetailsHeader);
                 _chnkLeftMemberInformation.Clear();
 
-                _chnkLeftMemberInformation.Add(new iText.Chunk("Clinic Name :" + Environment.NewLine, dataFontNormal));
+                _chnkLeftMemberInformation.Add(new iText.Chunk("Hospital Name :" + Environment.NewLine, dataFontNormal));
                 _chnkCenterMemberInformation.Add(new iText.Chunk(ServiceProvider + Environment.NewLine, dataFontNormal));
                 _chnkLeftMemberInformation.Add(new iText.Chunk("Contact No :", dataFontNormal));
-                if (!string.IsNullOrEmpty(_report.Tables[3].Rows[0]["ProviderContact"].ToString()))
+                if (!string.IsNullOrEmpty(_report.Tables[2].Rows[0]["ProviderContact"].ToString()))
                 {
                     if (!string.IsNullOrEmpty(ContactMobile))
                     {
@@ -598,7 +598,6 @@ namespace DontiaChinaProxy
                 //_AgreementBody.SetLeading(0.00f, 1.2f);
 
                 //iTextPdf.PdfPTable tblConforme = new iTextPdf.PdfPTable(1);
-
 
                 //tblConforme.AddCell(_AgreementBody);
                 //tblConforme.WidthPercentage = 90f;
@@ -959,7 +958,7 @@ namespace DontiaChinaProxy
                     cmd.CommandType = CommandType.StoredProcedure;
                     foreach (Parameters param in spParameters)
                     {
-                        cmd.Parameters.AddWithValue("@RequestNo", param.ParameterValue);
+                        cmd.Parameters.AddWithValue("@LOGNo", param.ParameterValue);
                     }
                     if (dbConnect.State == ConnectionState.Closed)
                     { dbConnect.Open(); }

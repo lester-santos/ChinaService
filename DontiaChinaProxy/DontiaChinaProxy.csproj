@@ -110,10 +110,12 @@
   <ItemGroup>
     <Content Include="DontiaChinaData.svc" />
     <Content Include="img\Dontiacare_03.png" />
+    <Content Include="img\dontiafooter.png" />
     <Content Include="img\DontiaLINK.png" />
     <Content Include="img\DontiaLINK_Logo_Gray.png" />
     <Content Include="img\Email\Footer.jpg" />
     <Content Include="img\Email\Header.jpg" />
+    <Content Include="img\Header.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -143,6 +145,9 @@
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\ChinaService - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\ChinaWS.pubxml" />
+    <None Include="Properties\PublishProfiles\keystonebenefits-Staging - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\keystonebenefits-Staging - Web Deploy %283%29.pubxml" />
+    <None Include="Properties\PublishProfiles\keystonebenefits-Staging - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -10,8 +10,8 @@ namespace DontiaChinaProxy
     {
         public static List<byte[]> ConvertImageToByte()
         {
-            string location2 = System.Configuration.ConfigurationManager.AppSettings["image_location"];
-            string location = AppDomain.CurrentDomain.BaseDirectory;
+            string location2 = System.Configuration.ConfigurationManager.AppSettings["image_location"]; 
+            string location = AppDomain.CurrentDomain.BaseDirectory; // string location = Server.MapPath(@"img\Dontiacare_03.png");
 
 
             string _dontiacare = location + @"img\Dontiacare_03.png";

@@ -128,6 +128,15 @@ namespace DontiaChinaProxy
             _BusinessLogic.UpdatePDPAPolicy(UserName, Ver);
         }
 
+        public DataSet EMR(string memberID)
+        {
+            return _BusinessLogic.EMR(memberID);
+        }
+
+        public byte[] EMRpdfFile(string Filename)
+        {
+            return _BusinessLogic.EMRpdfFile(Filename);
+        }
         // ====== eCard ======
         public string GetSequenceLOGReq()
         {

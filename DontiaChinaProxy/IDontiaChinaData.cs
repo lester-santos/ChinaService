@@ -82,6 +82,12 @@ namespace DontiaChinaProxy
 
         [OperationContract]
         string GetMembersContactNo(string MemberID);
+
+        [OperationContract]
+        DataSet EMR(string MemberID);
+
+        [OperationContract]
+        byte[] EMRpdfFile(string Filename);
         // ====== eCard ======
 
         [OperationContract]
