@@ -1055,5 +1055,11 @@ namespace DontiaChinaProxy.App_Code
         {
             return _DataAccess.UpdateClaimRead(logNo);
         }
+
+        public bool ChangePasswordKeystone(string memberID, string userName, string newPassword)
+        {
+            Crypto _Crypto = new Crypto();
+            return _DataAccess.ChangePasswordKeystone(memberID, userName, _Crypto.Encrypt(newPassword));
+        }
     }
 }

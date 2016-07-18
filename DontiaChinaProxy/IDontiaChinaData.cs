@@ -160,6 +160,8 @@ namespace DontiaChinaProxy
         string GetClientIPAddress();
 
 
+        [OperationContract]
+        bool ChangePasswordKeystone(string memberID, string userName, string newPassword);
     }
 
 }

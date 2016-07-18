@@ -230,6 +230,11 @@ namespace DontiaChinaProxy
             return ip;
         }
 
+        public bool ChangePasswordKeystone(string memberID, string userName, string newPassword)
+        {
+            return _BusinessLogic.ChangePasswordKeystone(memberID, userName, newPassword);
+        }
+
     }
 
 

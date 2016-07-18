@@ -1079,6 +1079,27 @@ namespace DontiaChinaProxy.App_Code
             }
             return ds;
         }
-        
+
+        public bool ChangePasswordKeystone(string memberID, string userName, string newPassword)
+        {
+            try
+            {
+                SqlCommand _cmd = new SqlCommand("_spUpdateMobilePassword", _DentalConOpen());
+                _cmd.CommandType = CommandType.StoredProcedure;
+                _cmd.Parameters.Add("@memberID", SqlDbType.VarChar).Value = memberID;
+                _cmd.Parameters.Add("@userName", SqlDbType.VarChar).Value = userName;
+                _cmd.Parameters.Add("@LOGNo", SqlDbType.VarChar).Value = newPassword;
+                _cmd.ExecuteNonQuery();
+                _cmd.Dispose();
+                return true;
+            }
+            catch (Exception)
+            { return false; }
+            finally
+            {
+                _DentalConClose();
+            }
+        }
+
     }
 }
