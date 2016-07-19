@@ -587,7 +587,7 @@ namespace DontiaChinaProxy.App_Code
             {
                 SqlCommand _cmd = new SqlCommand("_spGetUser", _DentalConOpen());
                 _cmd.CommandType = CommandType.StoredProcedure;
-                _cmd.Parameters.Add("@EmailAdd", SqlDbType.VarChar).Value = _strUserID.Trim();
+                _cmd.Parameters.Add("@UserID", SqlDbType.VarChar).Value = _strUserID.Trim();
                 SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
                 _adapter.Fill(_dt);
                 _adapter.Dispose();
@@ -617,6 +617,8 @@ namespace DontiaChinaProxy.App_Code
                     _modUser.UserLevel = _row["UserLevel"].ToString();
                     _modUser.ClinicStatus = _row["IsClinicActive"].ToString();
                     _modUser.ReadPDPAPolicy = _row["ReadPDPAPolicy"].ToString();
+                    _modUser.ReadPDPAPolicy = _row["ReadPDPAPolicy"].ToString();
+                    _modUser.UserEmailAdd = _row["EmailAddress"].ToString();
 
                     _listUsers.Add(_modUser);
                 }
@@ -1103,7 +1105,7 @@ namespace DontiaChinaProxy.App_Code
 
         public bool ResetPasswordKeystone(string UserName, string CardNo, out string MemberDetails)
         {
-            try
+            try_s
             {
                 SqlCommand _cmd = new SqlCommand("_spResetPassword", _DentalConOpen());
                 _cmd.CommandType = CommandType.StoredProcedure;

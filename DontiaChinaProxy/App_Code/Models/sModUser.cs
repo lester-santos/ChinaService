@@ -141,5 +141,8 @@ namespace DontiaChinaProxy.App_Code.Models
 
         [DataMember]
         public string ReadPDPAPolicy { get; set; }
+
+        [DataMember]
+        public string UserEmailAdd { get; set; }
     }
 }
