@@ -40,12 +40,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AjaxControlToolkit">
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="BusinessLogicLayer">
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\BusinessLogicLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAccessLayer">
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\DataAccessLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="DontiaChina">
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\DontiaChina.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.1.2.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\itextsharp.dll</HintPath>
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="MedilinkSecurity">
-      <HintPath>..\..\..\MedilinkSecurity.dll</HintPath>
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\MedilinkSecurity.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
@@ -64,14 +76,8 @@
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.7.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Storage.7.0.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <HintPath>..\..\DontiaChina_2\packages\WindowsAzure.Storage.7.0.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -79,7 +85,28 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OnBarcode.Barcode.ASPNET">
-      <HintPath>..\..\..\Projects\Providerlink\ProviderlinkV3Test\Bin\OnBarcode.Barcode.ASPNET.dll</HintPath>
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\OnBarcode.Barcode.ASPNET.dll</HintPath>
+    </Reference>
+    <Reference Include="Plivo, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DontiaChina_2\packages\Plivo.3.0.4\lib\net40\Plivo.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=100.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DontiaChina_2\packages\RestSharpSigned.105.1.0\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGrid">
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\SendGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGridMail">
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\SendGridMail.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
@@ -104,7 +131,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="zxing, Version=0.14.0.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\zxing.dll</HintPath>
+      <HintPath>..\..\DontiaChina_2\DontiaChina\bin\zxing.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -173,7 +200,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:36090/</IISUrl>
+          <IISUrl>http://localhost:36091/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

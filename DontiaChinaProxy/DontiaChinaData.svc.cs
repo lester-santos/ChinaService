@@ -15,7 +15,7 @@ namespace DontiaChinaProxy
     // NOTE: In order to launch WCF Test Client for testing this service, please select DentaLINKData.svc or DentaLINKData.svc.cs at the Solution Explorer and start debugging.
     public class DontiaChinaData : IDontiaChinaData
     {
-        BusinessLogicLayer _BusinessLogic = new BusinessLogicLayer();
+        App_Code.BusinessLogicLayer _BusinessLogic = new App_Code.BusinessLogicLayer();
         public void DoWork()
         {
         }
@@ -136,6 +136,10 @@ namespace DontiaChinaProxy
         public byte[] EMRpdfFile(string Filename)
         {
             return _BusinessLogic.EMRpdfFile(Filename);
+        }
+        public bool ResetPasswordKeystone(string CardNo)
+        {
+            return _BusinessLogic.ResetPasswordKeystone(CardNo);
         }
         // ====== eCard ======
         public string GetSequenceLOGReq()

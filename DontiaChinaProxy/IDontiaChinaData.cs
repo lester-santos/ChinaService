@@ -88,6 +88,9 @@ namespace DontiaChinaProxy
 
         [OperationContract]
         byte[] EMRpdfFile(string Filename);
+
+        [OperationContract]
+        bool ResetPasswordKeystone(string CardNo);
         // ====== eCard ======
 
         [OperationContract]

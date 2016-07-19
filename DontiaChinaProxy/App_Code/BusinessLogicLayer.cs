@@ -11,6 +11,11 @@ using System.Text;
 using System.Threading;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using System.Net.Mime;
+using SendGrid;
+using System.IO;
+using RestSharp;
+using Plivo.API;
 
 namespace DontiaChinaProxy.App_Code
 {
@@ -1061,5 +1066,213 @@ namespace DontiaChinaProxy.App_Code
             Crypto _Crypto = new Crypto();
             return _DataAccess.ChangePasswordKeystone(memberID, userName, _Crypto.Encrypt(newPassword));
         }
+        public bool ResetPasswordKeystone(string CardNo)
+        {
+            Crypto _Crypto = new Crypto();
+            string UserName = _Crypto.Encrypt(CardNo);
+            string MemberDetails = String.Empty;
+            if (_DataAccess.ResetPasswordKeystone(UserName, CardNo, out MemberDetails))
+            {
+                if (MemberDetails.Contains("@"))     //If string MemberDetails is Email Address
+                {
+                    return SendEmailResetPassword(MemberDetails);
+                }
+                else
+                {
+                    try
+                    {
+                        SendSMS("+965175001844", MemberDetails.Split('|')[1],
+                       "The password for your Health Care Platform account has been reset. Your Card No is now also your password. Please login to the mobile app using your Card No as your password."); //If string MemberDetails is ContactNo
+                        return true;
+                    }
+                    catch(Exception ex)
+                    {
+                        return false;
+                    }
+               }
+            }
+            return false;
+        }
+
+        public bool SendEmailResetPassword(string MemberDetails)
+        {
+            string _strCreateCredentialCc = ConfigurationManager.AppSettings["CreateCredentialEmailCc"].ToString();
+            bool _success = true;
+            try
+            {
+                string imgPath = HttpContext.Current.Server.MapPath("~/img/Email/");
+                List<string> msgTo = new List<string>();
+                List<string> msgBCC = new List<string>();
+                List<string> msgCC = new List<string>();
+                string msgBody = string.Empty;
+                List<string> msgAttachment = new List<string>();
+                string msgSubject = string.Empty;
+                ContentType ctype = new ContentType("image/jpg");
+                var attachmentheader = new Attachment(imgPath + "Header.jpg", ctype);
+                var inlineLogoHeader = new LinkedResource(imgPath + "Header.jpg");
+                inlineLogoHeader.ContentId = Guid.NewGuid().ToString();
+                var inlineLogoFooter = new LinkedResource(imgPath + "Footer.jpg");
+                inlineLogoFooter.ContentId = Guid.NewGuid().ToString();
+
+                StringBuilder sb = new StringBuilder();
+                msgTo.Add(MemberDetails.Split('|')[1]);
+                string[] arrEmailBcc = _strCreateCredentialBcc.Split(';');
+                foreach (string str in arrEmailBcc)
+                { msgBCC.Add(str); }
+                msgSubject = "Health Care Reset Password";
+                sb.Append("<style>table,th,td {border : 1px solid black; border-collapse: collapse;}th, td { padding: 5px; text-align: left; font-size : 10pt} p{font-size : 10pt}</style>");
+                sb.Append("<img style='width:100%' src= cid:" + inlineLogoHeader.ContentId + " />");
+                sb.Append("<h4>RESET PASSWORD</h4>");
+                sb.Append("<p>"+ MemberDetails.Split('|')[0] + ",</p>");
+                sb.Append("<p>The password for your Health Care Platform account has been reset. Your Card No is now also your password. </p>"); 
+                sb.Append("<p>Please login to the mobile app using your Card No as your password. </p><br/>");
+                sb.Append("<p>Thanks,<br/> Keystone Benefits</p>");
+                sb.Append("<p style='font-size: 10pt; font-family: Tahoma;'>Replies sent to this email address cannot be answered. For additional help, please contact us at <span style='color:#FE9A2E'>+65 6737 8088</span> or <span style='color:#FE9A2E'><u>enquiry@keystones.com</u></span></p>");
+                //sb.Append("<img style='width:100%' src=cid:" + inlineLogoFooter.ContentId + " />");
+                msgBody = sb.ToString();
+                var view = AlternateView.CreateAlternateViewFromString(msgBody, null, "text/html");
+                view.LinkedResources.Add(inlineLogoHeader);
+                view.LinkedResources.Add(inlineLogoFooter);
+                _success = _SendMail(msgTo, msgBCC, msgCC, msgBody, msgAttachment, msgSubject, view, attachmentheader, inlineLogoHeader);
+
+
+                return _success;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+        }
+
+
+
+        public bool _SendMail(List<string> msgTo, List<string> msgBCC, List<string> msgCC, string msgBody, List<string> msgAttachment, string msgSubject, System.Net.Mail.AlternateView view, Attachment AttachmentHeader, LinkedResource lnkHeader)
+        {
+            bool _succcess = false;
+
+            var ms = new MemoryStream();
+
+            // Create the email object first, then add the properties.
+            if (msgAttachment.Count > 0)
+            {
+                CloudBlockBlob blockBlob = blockBlobClient("pdffiles", msgAttachment[0]);
+                blockBlob.DownloadToStream(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+            }
+
+
+
+            SendGridMessage myMessage = new SendGridMessage();
+            myMessage.From = new MailAddress(_strEmailFrom);
+            myMessage.Html = msgBody;
+            myMessage.Subject = msgSubject;
+
+            myMessage.AddAttachment(AttachmentHeader.ContentStream, AttachmentHeader.Name);
+            myMessage.EmbedImage(AttachmentHeader.Name, lnkHeader.ContentId);
+
+
+            if (msgTo != null)
+            {
+                foreach (string strmsgTo in msgTo)
+                {
+                    myMessage.AddTo(strmsgTo);
+                }
+            }
+
+            if (msgBCC != null)
+            {
+                foreach (string strmsgBCC in msgBCC)
+                {
+                    myMessage.AddBcc(strmsgBCC);
+                }
+            }
+
+            if (msgAttachment != null)
+            {
+                foreach (string strMsgAttachment in msgAttachment)
+                {
+                    myMessage.AddAttachment(ms, msgAttachment[0]);
+                }
+            }
+
+
+            // Create an Web transport for sending email.
+            var transportWeb = new Web(ConfigurationManager.AppSettings["SendGridAPI"]);
+
+            // Send the email, which returns an awaitable task.          
+            try
+            {
+                transportWeb.DeliverAsync(myMessage);
+                _succcess = true;
+            }
+            catch (Exception ex)
+            {
+                _succcess = false;
+                throw (ex);
+            }
+
+            return _succcess;
+        }
+
+
+        public static Boolean IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+
+                stream = file.Open
+                (
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.None
+                );
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            return false;
+        }
+
+        public CloudBlockBlob blockBlobClient(string ConatainerName, string FileName)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference(ConatainerName);
+            container.CreateIfNotExists();
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(FileName);
+
+            return blockBlob;
+        }
+
+         private void SendSMS(string from, string to, string text)
+        {
+            string authId = "MANZE3ZWEYMTM4MWRMOW";
+            string autoToken = "MTg0ZDY5MWNkZTdjNmJlM2ZiOTliMjU1ZjRmYjlj";
+            RestAPI plivo = new RestAPI(authId, autoToken);
+            IRestResponse resp = plivo.send_message(new Dictionary<string, string>()
+            {
+                { "src", "" + from + "" }, // Sender's phone number with country code
+                { "dst", "" + to + "" }, // Receiver's phone number wiht country code
+                { "text", "" + text + "" }, // Your SMS text message
+                // To send Unicode text
+                // {"text", "こんにちは、元気ですか？"} // Your SMS text message - Japanese
+                // {"text", "Ce est texte généré aléatoirement"} // Your SMS text message - French
+                { "url", "https://api.plivo.com/v1/Account/" + authId + "/Message/"}, // The URL to which with the status of the message is sent
+                { "method", "POST"} // Method to invoke the url
+            });
+
+        }
+
+
     }
 }

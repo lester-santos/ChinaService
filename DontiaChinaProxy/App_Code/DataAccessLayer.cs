@@ -1101,5 +1101,28 @@ namespace DontiaChinaProxy.App_Code
             }
         }
 
+        public bool ResetPasswordKeystone(string UserName, string CardNo, out string MemberDetails)
+        {
+            try
+            {
+                SqlCommand _cmd = new SqlCommand("_spResetPassword", _DentalConOpen());
+                _cmd.CommandType = CommandType.StoredProcedure;
+                _cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = UserName;
+                _cmd.Parameters.Add("@CardNo", SqlDbType.VarChar).Value = CardNo;
+                MemberDetails = (string)_cmd.ExecuteScalar();
+                _cmd.Dispose();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MemberDetails = "";
+                return false;
+            }
+            finally
+            {
+                _DentalConClose();
+            }
+        }
+
     }
 }
