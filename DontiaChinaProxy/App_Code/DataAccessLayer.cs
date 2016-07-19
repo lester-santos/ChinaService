@@ -1088,7 +1088,7 @@ namespace DontiaChinaProxy.App_Code
                 _cmd.CommandType = CommandType.StoredProcedure;
                 _cmd.Parameters.Add("@memberID", SqlDbType.VarChar).Value = memberID;
                 _cmd.Parameters.Add("@userName", SqlDbType.VarChar).Value = userName;
-                _cmd.Parameters.Add("@LOGNo", SqlDbType.VarChar).Value = newPassword;
+                _cmd.Parameters.Add("@newPassword", SqlDbType.VarChar).Value = newPassword;
                 _cmd.ExecuteNonQuery();
                 _cmd.Dispose();
                 return true;
