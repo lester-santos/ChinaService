@@ -587,7 +587,7 @@ namespace DontiaChinaProxy.App_Code
             {
                 SqlCommand _cmd = new SqlCommand("_spGetUser", _DentalConOpen());
                 _cmd.CommandType = CommandType.StoredProcedure;
-                _cmd.Parameters.Add("@EmailAdd", SqlDbType.VarChar).Value = _strUserID.Trim();
+                _cmd.Parameters.Add("@UserID", SqlDbType.VarChar).Value = _strUserID.Trim();
                 SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
                 _adapter.Fill(_dt);
                 _adapter.Dispose();
