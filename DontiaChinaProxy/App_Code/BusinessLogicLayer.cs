@@ -557,7 +557,7 @@ namespace DontiaChinaProxy.App_Code
                             _modUser.WrongPasswordCnt = _listUser[0].WrongPasswordCnt;
                             _modUser.ReqType = "ExcessiveWrongPwd";
                             _success = _DataAccess.UpateUserDetails(_modUser);
-                            SendEmailExceedPasswordAttempt(_ModTran.header, _ModTran.footer, _listUser[0].FirstName + " " + _listUser[0].LastName, _listUser[0].UserID.ToString(), _strNewPwd);
+                            SendEmailExceedPasswordAttempt(_ModTran.header, _ModTran.footer, _listUser[0].FirstName + " " + _listUser[0].LastName, _listUser[0].UserID.ToString(), _listUser[0].UserEmailAdd.ToString(), _strNewPwd);
                             _strReturn = "FAILED|Your password has been reset and sent to your registered email address.||||||||";
 
                         }
@@ -851,7 +851,7 @@ namespace DontiaChinaProxy.App_Code
             return _succcess;
         }
 
-        private bool SendEmailExceedPasswordAttempt(string header, string footer, string Fullname, string username, string Password)
+        private bool SendEmailExceedPasswordAttempt(string header, string footer, string Fullname, string username,string EmailAdd, string Password)
         {
             string _strCreateCredentialCc = ConfigurationManager.AppSettings["CreateCredentialEmailBcc"].ToString();
             bool _success = true;
@@ -872,7 +872,7 @@ namespace DontiaChinaProxy.App_Code
                 string link = string.Format(@_strUri + "://" + _strDentaLINKLeasedLink + "/Login.aspx?x=|" + _Crypto.Encrypt(Password)) + "|" + _Crypto.Encrypt(username);
 
                 StringBuilder sb = new StringBuilder();
-                msgTo.Add(username);
+                msgTo.Add(EmailAdd);
                 string[] arrEmailBcc = _strCreateCredentialBcc.Split(';');
                 foreach (string str in arrEmailBcc)
                 { msgBCC.Add(str); }
