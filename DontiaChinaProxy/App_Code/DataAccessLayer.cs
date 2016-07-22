@@ -1105,7 +1105,7 @@ namespace DontiaChinaProxy.App_Code
 
         public bool ResetPasswordKeystone(string UserName, string CardNo, out string MemberDetails)
         {
-            try_s
+            try
             {
                 SqlCommand _cmd = new SqlCommand("_spResetPassword", _DentalConOpen());
                 _cmd.CommandType = CommandType.StoredProcedure;

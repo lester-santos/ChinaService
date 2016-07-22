@@ -579,7 +579,7 @@ namespace DontiaChinaProxy.App_Code
                                 _modUser.ReqType = "ExcessiveWrongPwd";
                                 _success = _DataAccess.UpateUserDetails(_modUser);
                                 //SendEmailExceedPasswordAttempt(_listUser[0].UserID.ToString(), _strNewPwd);
-                                SendEmailExceedPasswordAttempt(_ModTran.header, _ModTran.footer, _listUser[0].FirstName + " " + _listUser[0].LastName, _listUser[0].UserID.ToString(), _strNewPwd);
+                                SendEmailExceedPasswordAttempt(_ModTran.header, _ModTran.footer, _listUser[0].FirstName + " " + _listUser[0].LastName, _listUser[0].UserID.ToString(),_listUser[0].UserEmailAdd.ToString(), _strNewPwd);
                                 _strReturn = "FAILED|Your password has been reset and sent to your registered email address.||||||||";
 
 
