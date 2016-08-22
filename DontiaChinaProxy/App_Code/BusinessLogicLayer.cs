@@ -1096,7 +1096,7 @@ namespace DontiaChinaProxy.App_Code
 
         public bool SendEmailResetPassword(string MemberDetails)
         {
-            string _strCreateCredentialCc = ConfigurationManager.AppSettings["CreateCredentialEmailCc"].ToString();
+            //string _strCreateCredentialCc = ConfigurationManager.AppSettings["CreateCredentialEmailCc"].ToString();
             bool _success = true;
             try
             {
